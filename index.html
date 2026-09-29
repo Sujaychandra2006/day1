@@ -1,30 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>External CSS</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Validator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 16px 8vw;
+            background: linear-gradient(135deg, #ff9933 0%, #fff4e6 45%, #e8f5e3 60%, #138808 100%);
+        }
+
+        /* Photo on the left side */
+        .bg {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 55%;
+            z-index: -1;
+            background: url("https://commons.wikimedia.org/wiki/Special:FilePath/C._Joseph_Vijay_(cropped).jpg?width=1200") center 20% / cover no-repeat;
+            /* fade the photo's right edge into the page */
+            -webkit-mask-image: linear-gradient(to right, #000 60%, transparent 100%);
+            mask-image: linear-gradient(to right, #000 60%, transparent 100%);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            width: 100%;
+            max-width: 400px;
+            padding: 32px 28px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        /* Phones: photo fills the screen behind the card */
+        @media (max-width: 800px) {
+            body { justify-content: center; padding: 16px; }
+            .bg {
+                width: 100%;
+                -webkit-mask-image: none;
+                mask-image: none;
+                background:
+                    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+                    url("https://commons.wikimedia.org/wiki/Special:FilePath/C._Joseph_Vijay_(cropped).jpg?width=1200") center 20% / cover no-repeat;
+            }
+        }
+
+        .flag {
+            display: flex;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .flag span { flex: 1; }
+        .flag .saffron { background: #ff9933; }
+        .flag .white   { background: #e8e8e8; }
+        .flag .green   { background: #138808; }
+
+        .icon { font-size: 42px; margin-bottom: 8px; }
+
+        h3 { font-size: 24px; color: #000080; margin-bottom: 4px; }
+
+        .subtitle { font-size: 13px; color: #777; margin-bottom: 24px; }
+
+        .field { text-align: left; margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #fafafa;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: #000080;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 10px;
+            background: #000080;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover  { background: #1a1aa6; }
+        button:active { transform: scale(0.98); }
+
+        #Answer {
+            margin-top: 22px;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            background: #f1f1f1;
+            color: #666;
+        }
+        #Answer.success { background: #e6f4ea; color: #138808; }
+        #Answer.error   { background: #fdecea; color: #c62828; }
+        #Answer.warning { background: #fff4e5; color: #e67e00; }
+
+        .credit {
+            position: fixed;
+            left: 10px;
+            bottom: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        .credit a { color: inherit; }
+    </style>
 </head>
 <body>
-  <h1>External CSS</h1>
-  <p>This paragraph is styled using external CSS file.</p>
+    <div class="bg" aria-hidden="true"></div>
 
-  <img src="https://i.imgflip.com/b26ppb.jpg" alt="Random image">
+    <div class="card">
+        <div class="flag">
+            <span class="saffron"></span>
+            <span class="white"></span>
+            <span class="green"></span>
+        </div>
 
-  <img id="panda"
-       src="https://commons.wikimedia.org/wiki/Special:FilePath/Grosser_Panda.JPG?width=500"
-       alt="Giant panda">
+        <div class="icon">🗳️</div>
+        <h3>Vote Validator</h3>
+        <p class="subtitle">Check if you are eligible to vote in India</p>
 
-<div id="div1"></div>
-<div id="div2"></div>
-<div id="div3"></div>
+        <div class="field">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Enter your name">
+        </div>
+
+        <div class="field">
+            <label for="age">Age</label>
+            <input type="number" id="age" placeholder="Enter your age" min="0">
+        </div>
+
+        <div class="field">
+            <label for="country">Country</label>
+            <select id="country">
+                <option value="">Select your country</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Germany">Germany</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <button onclick="vote()">Check Eligibility</button>
+
+        <p id="Answer">Your result will appear here</p>
+    </div>
+
+    <p class="credit">
+        Photo: <a href="https://imgs.search.brave.com/3nvrn2je1FwQZ2bmgOSbnZFJaFUNW-VKHCs2ljetirA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudG9paW1nLmNv/bS90aHVtYi9tc2lk/LTEzNDMwMzQ3NSxp/bWdzaXplLTU1OTgw/LHdpZHRoLTQwMCxo/ZWlnaHQtMjI1LHJl/c2l6ZW1vZGUtNzUv/dG4tY20tai1qb3Nl/cGgtdmlqYXktbWFk/ZS1hLXNpZ25pZmlj/YW50LXN0cmlkZS1k/dXJpbmctaGlzLWxv/bmRvbi12aXNpdC1i/eS1hZHZvY2F0aW5n/LWZvci10aGUtc3Rh/dGVzLWludmVzdG1l/bnQtbGFuZHNjYXBl/LWFuZC1pbmR1c3Ry/aWFsLXByb2dyZXNz/LXJlcHJlc2VudGF0/aXZlLWltYWdlLmpw/Zw" target="_blank"></a>
+    </p>
+
+    <script src="vote.js"></script>
 </body>
 </html>
-<form action="">
-  <input type="text" placeholder="Enter your name">
-  <input type="number" name="" id="" placeholder="Enter your age">
-  <input type="password" name="" id="" placeholder="enter your password">
-  <button>submit</button>
-</form>
-<img src="..." class="img-fluid" alt="...">
-
